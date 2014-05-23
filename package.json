@@ -1,0 +1,24 @@
+{
+  "name": "just-login-emailer",
+  "version": "1.0.0",
+  "description": "Sends emails to folks who want to log in!",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coding-in-the-wild/just-login-emailer.git"
+  },
+  "keywords": [
+    "just-login"
+  ],
+  "author": "",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/coding-in-the-wild/just-login-emailer/issues"
+  },
+  "homepage": "https://github.com/coding-in-the-wild/just-login-emailer",
+  "dependencies": {
+    "nodemailer": "~0.6.5",
+    "ractive": "~0.4.0",
+    "extend": "~1.2.1"
+  }
+}
