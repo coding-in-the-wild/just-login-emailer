@@ -34,7 +34,7 @@ var defaultMailOptions = {
 
 LoginMailer(fakeCore, createHtmlEmail, emailSendingOptions, defaultMailOptions)
 
-fakeCore.emit('authentication initiated', {
+fakeCore.emit('auth', {
 	token: 'totallyNotFakeLoginToken',
 	contactAddress: emailAddress
 })
