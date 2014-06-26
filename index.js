@@ -10,7 +10,7 @@ module.exports = function LoginMailer(justLoginCore, createHtmlEmail, transportO
 			html: createHtmlEmail(loginRequest.token)
 		}, defaultMailOptions), function(err, response) {
 			if (err) {
-				console.log("ERRRROOOOOOR", err.message)
+				console.log("Email Error:", err.message)
 			} else {
 				console.log(response)
 			}
