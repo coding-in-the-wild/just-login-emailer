@@ -1,6 +1,6 @@
 {
   "name": "just-login-emailer",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Sends emails to folks who want to log in!",
   "main": "index.js",
   "repository": {

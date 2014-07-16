@@ -1,3 +1,4 @@
+var test = require('tap').test
 var EventEmitter = require('events').EventEmitter
 var LoginMailer = require('../index.js')
 var xtend = require('xtend')
@@ -16,29 +17,36 @@ var transportOptions = {
 	}
 }
 
-var fakeCore = Object.create(new EventEmitter())
+test('test for email sending', function (t) {
+	t.plan(2)
 
-var ractiveTemplate = Ractive.parse('<div>You should totally log in!<br />'
-	+ 'Click <a href="http://localhost:9999/magical-login?secretCode={{token}}">here!</a></div>')
+	var fakeCore = Object.create(new EventEmitter())
 
-function createHtmlEmail(loginToken) {
-	return new Ractive({
-		el: '',
-		template: ractiveTemplate,
-		data: {
-			token: loginToken
-		}
-	}).toHTML()
-}
+	var ractiveTemplate = Ractive.parse('<div>You should totally log in!<br />'
+		+ 'Click <a href="http://localhost:9999/magical-login?secretCode={{token}}">here!</a></div>')
+	function createHtmlEmail(loginToken) {
+		return new Ractive({
+			el: '',
+			template: ractiveTemplate,
+			data: {
+				token: loginToken
+			}
+		}).toHTML()
+	}
 
-var defaultMailOptions = {
-	from: 'justloginexample@gmail.com',
-	subject: 'Login to this site!'
-}
+	var defaultMailOptions = {
+		from: 'justloginexample@gmail.com',
+		subject: 'Login to this site!'
+	}
 
-LoginMailer(fakeCore, createHtmlEmail, transportOptions, defaultMailOptions)
+	LoginMailer(fakeCore, createHtmlEmail, transportOptions, defaultMailOptions, function (err, info) {
+		t.notOk(err, "no error")
+		t.ok(info, "got response")
+		t.end()
+	})
 
-fakeCore.emit('authentication initiated', {
-	token: 'totallyNotFakeLoginToken',
-	contactAddress: emailAddress
+	fakeCore.emit('authentication initiated', {
+		token: 'totallyNotFakeLoginToken',
+		contactAddress: emailAddress
+	})
 })
