@@ -1,11 +1,11 @@
 var nodemailer = require("nodemailer")
-var extend = require('extend')
+var xtend = require('xtend')
 
 module.exports = function LoginMailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions) {
 	var transport = nodemailer.createTransport(transportOptions)
 
 	emitter.on('authentication initiated', function(loginRequest) {
-		transport.sendMail(extend({
+		transport.sendMail(xtend({
 			to: loginRequest.contactAddress,
 			html: createHtmlEmail(loginRequest.token)
 		}, defaultMailOptions), function(err, response) {

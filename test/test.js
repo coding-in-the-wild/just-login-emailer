@@ -1,23 +1,25 @@
 var EventEmitter = require('events').EventEmitter
-var LoginMailer = require('./index.js')
+var LoginMailer = require('../index.js')
+var xtend = require('xtend')
 var Ractive = require('ractive')
 var Wellknown = require('nodemailer-wellknown') //host, port, secure
 
-var emailAddress = 'josephdykstra@gmail.com'
-var transportOptions = xtend(
-	Wellknown('gmail'),
-	{
-		auth: {
-			user: 'justloginexample@gmail.com',
-			pass: 'justloginexamplegmail'
-		}
+var emailAddress = 'joseph'+'dykstra@gmail.com' //Send the email to whom...
+var password = require('../../#sensitive-info/just-login-email-opts.js') //password for sending emails
+var transportOptions = {
+	host: 'smtp.gmail.com',
+	port: 465,
+	secure: true,
+	auth: {
+		user: 'justloginexample@gmail.com',
+		pass: password
 	}
-)
+}
 
 var fakeCore = Object.create(new EventEmitter())
 
 var ractiveTemplate = Ractive.parse('<div>You should totally log in!<br />'
-	+ 'Click <a href="http://somesite.com/login?secretCode={{token}}">here!</a></div>')
+	+ 'Click <a href="http://localhost:9999/magical-login?secretCode={{token}}">here!</a></div>')
 
 function createHtmlEmail(loginToken) {
 	return new Ractive({
@@ -31,7 +33,6 @@ function createHtmlEmail(loginToken) {
 
 var defaultMailOptions = {
 	from: 'justloginexample@gmail.com',
-	//replyTo: 'justloginexample@gmail.com', //dont need?
 	subject: 'Login to this site!'
 }
 

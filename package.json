@@ -17,11 +17,14 @@
   },
   "homepage": "https://github.com/coding-in-the-wild/just-login-emailer",
   "dependencies": {
-    "extend": "^1.2.1",
+    "xtend": "^3.0.0",
     "nodemailer": "^1.0.2",
     "nodemailer-wellknown": "^0.1.1"
   },
   "devDependencies": {
     "ractive": "^0.4.0"
+  },
+  "scripts": {
+    "test": "tap ./test/*.js"
   }
 }
