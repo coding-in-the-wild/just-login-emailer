@@ -17,8 +17,9 @@
   },
   "homepage": "https://github.com/coding-in-the-wild/just-login-emailer",
   "dependencies": {
-    "nodemailer": "^0.6.5",
-    "extend": "^1.2.1"
+    "extend": "^1.2.1",
+    "nodemailer": "^1.0.2",
+    "nodemailer-wellknown": "^0.1.1"
   },
   "devDependencies": {
     "ractive": "^0.4.0"

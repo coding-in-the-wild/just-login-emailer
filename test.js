@@ -1,15 +1,18 @@
 var EventEmitter = require('events').EventEmitter
 var LoginMailer = require('./index.js')
 var Ractive = require('ractive')
+var Wellknown = require('nodemailer-wellknown') //host, port, secure
 
-var emailAddress = ''
-var emailSendingOptions = {
-	host: 'mail.fiddlebutt.com',
-	auth: {
-		user: 'login@fiddlebutt.com',
-		pass: ''
+var emailAddress = 'josephdykstra@gmail.com'
+var transportOptions = xtend(
+	Wellknown('gmail'),
+	{
+		auth: {
+			user: 'justloginexample@gmail.com',
+			pass: 'justloginexamplegmail'
+		}
 	}
-}
+)
 
 var fakeCore = Object.create(new EventEmitter())
 
@@ -27,12 +30,12 @@ function createHtmlEmail(loginToken) {
 }
 
 var defaultMailOptions = {
-	from: 'login@fiddlebutt.com',
-	replyTo: 'no-reply@fiddlebutt.com',
+	from: 'justloginexample@gmail.com',
+	//replyTo: 'justloginexample@gmail.com', //dont need?
 	subject: 'Login to this site!'
 }
 
-LoginMailer(fakeCore, createHtmlEmail, emailSendingOptions, defaultMailOptions)
+LoginMailer(fakeCore, createHtmlEmail, transportOptions, defaultMailOptions)
 
 fakeCore.emit('authentication initiated', {
 	token: 'totallyNotFakeLoginToken',

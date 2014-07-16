@@ -1,8 +1,8 @@
 var nodemailer = require("nodemailer")
 var extend = require('extend')
 
-module.exports = function LoginMailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions, transportType) {
-	var transport = nodemailer.createTransport(transportType || 'SMTP', transportOptions)
+module.exports = function LoginMailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions) {
+	var transport = nodemailer.createTransport(transportOptions)
 
 	emitter.on('authentication initiated', function(loginRequest) {
 		transport.sendMail(extend({
