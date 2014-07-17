@@ -23,7 +23,7 @@ test('test for email sending', function (t) {
 	var fakeCore = Object.create(new EventEmitter())
 
 	var ractiveTemplate = Ractive.parse('<div>You should totally log in!<br />'
-		+ 'Click <a href="http://localhost:9999/magical-login?secretCode={{token}}">here!</a></div>')
+		+ 'Click <a href="http://localhost:9999/magical-login?token={{token}}">here!</a></div>')
 	function createHtmlEmail(loginToken) {
 		return new Ractive({
 			el: '',
