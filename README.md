@@ -1,29 +1,79 @@
 just-login-emailer
 ==================
 
-#Install and Require
+#Install
 
-With npm do: 
+With [npm](http://npmjs.org) do: 
 	
 	npm install just-login-emailer
 
+#Require
+
 Require in src:
 
-	var loginMailer = require('just-login-emailer')
+```js
+var justLoginEmailer = require('just-login-emailer')
+```
 
-##loginMailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions, callback)
+#Usage
+
+##justLoginEmailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions, callback)
 
 - `emitter` is an emitter that emits the event, `authentication initiated`, like the just-login-core does.
 - `createHtmlEmail` is a function with the argument `token` and it returns an HTML email
-	- `token` is the token given in the `authentication initiated` event.
-- `transportOptions` is the object given to [`nodemailer.createTransport()`](https://github.com/andris9/Nodemailer#tldr-usage-example)
-- `defaultMailOptions` is an object with these settable properties: `from`, `to`, `subject`, `text`, `html`, etc. (See [nodemailer/Email Message Properties](https://github.com/andris9/Nodemailer#e-mail-message-fields) for more information. Please note that the `to` and `html` properties will be overwritten.)
+	- `token` is the token string given in the `authentication initiated` event.
+- `transportOptions` is the object given to [`nodemailer.createTransport()`][nm-ct]. Needs these properties: `host`, `port`, `secure`, and `auth`. `auth` needs these properties: `user`, `pass`
+- `defaultMailOptions` is an object with these properties: `from`, `to`, `subject`, `text`, `html`, etc. (Needs `from` and `subject`. `from` must be an email address. See [nodemailer/Email Message Fields][nm-emf] for more information. Please note that the `to` and `html` properties will be overwritten.)
 - `callback` is the callback function with the arguments `err` and `info`.
-	- `err` is the error object if sending failed.
-	- `info` is an object. See [nodemailer/Sending mail](https://github.com/andris9/Nodemailer#sending-mail) for details on `info`.
+	- `err` is an error object if sending failed, and `null` if it was successful.
+	- `info` is an object. See [nodemailer/Sending mail][nm-sm] for details on `info`. (You probably don't need this object.)
 
-#notes
+#Example
 
-If you use browserify, it might throw an error saying: `Error: module "iconv" not found from "[LONG PATH HERE]"`.
+```js
+var EventEmitter = require('events').EventEmitter
+var escapeHtml = require('escape-html')
 
-If that happens, browse to your `just-login-example` folder and navigate to `\node_modules\just-login-emailer\node_modules\nodemailer\node_modules\mailcomposer\node_modules\mimelib\node_modules\encoding\lib\encoding.js`. Comment out line 7, between the `try` and `catch` statements, should look like `Iconv = require('iconv').Iconv;`.
+var emitter = new EventEmitter()
+
+setTimeout(function () {
+	emitter.emit('authentication initiated', {
+		contactAddress: 'user@example.com',
+		sessionId: '1234567890qwertyuiopasdfghjkl'
+	})
+}, 5000)
+
+function createHtmlEmail(token) {
+	return escapeHtml(
+		'<html><body>'
+		+ '<h1>Login Now!</h1>'
+		+ '<p>If you do want to log in, click <a href="http://example.com/login?token=' + token + '">right here</a>!</p>'
+		+ '<p>If not, ignore this email!</p>'
+		+ '</body></html>'
+	)
+}
+
+var transportOptions = { //if using gmail sending server
+	host: "smtp.gmail.com",
+	port: 465,
+	secure: true,
+	auth: {
+		user: "justloginexample@gmail.com",
+		pass: "whatever the password is"
+	}
+}
+
+var defaultMailOptions = {
+	from: 'whomever@example.com',
+	subject: 'login now'
+}
+
+JlEmailer(emitter, htmlEmail, transportOptions, defaultMailOptions, function (err, info) {
+	if (err) console.error(err)
+})
+```
+
+
+[nm-emf]: https://github.com/andris9/Nodemailer#e-mail-message-fields
+[nm-sm]: https://github.com/andris9/Nodemailer#sending-mail
+[nm-ct]: https://github.com/andris9/Nodemailer#tldr-usage-example
