@@ -30,17 +30,19 @@ var justLoginEmailer = require('just-login-emailer')
 
 #Example
 
+Usage with the [Just Login Core][core]
+
 ```js
-var EventEmitter = require('events').EventEmitter
+var justLoginEmailer = require('just-login-emailer')
+var JustLoginCore = require('just-login-core')
+var level = require('level')
 var escapeHtml = require('escape-html')
 
-var emitter = new EventEmitter()
+var db = level('./databases/core')
+var justLoginCore = JustLoginCore(db)
 
 setTimeout(function () {
-	emitter.emit('authentication initiated', {
-		contactAddress: 'user@example.com',
-		sessionId: '1234567890qwertyuiopasdfghjkl'
-	})
+	justLoginCore.beginAuthentication('session id', 'user@example.com', function () {})
 }, 5000)
 
 function createHtmlEmail(token) {
@@ -53,22 +55,22 @@ function createHtmlEmail(token) {
 	)
 }
 
-var transportOptions = { //if using gmail sending server
+var transportOptions = { //if using gmail's sending server
 	host: "smtp.gmail.com",
 	port: 465,
 	secure: true,
 	auth: {
-		user: "justloginexample@gmail.com",
+		user: "sending_address@gmail.com",
 		pass: "whatever the password is"
 	}
 }
 
 var defaultMailOptions = {
-	from: 'whomever@example.com',
+	from: 'sending_address@gmail.com',
 	subject: 'login now'
 }
 
-JlEmailer(emitter, htmlEmail, transportOptions, defaultMailOptions, function (err, info) {
+justLoginEmailer(emitter, htmlEmail, transportOptions, defaultMailOptions, function (err, info) {
 	if (err) console.error(err)
 })
 ```
@@ -77,3 +79,4 @@ JlEmailer(emitter, htmlEmail, transportOptions, defaultMailOptions, function (er
 [nm-emf]: https://github.com/andris9/Nodemailer#e-mail-message-fields
 [nm-sm]: https://github.com/andris9/Nodemailer#sending-mail
 [nm-ct]: https://github.com/andris9/Nodemailer#tldr-usage-example
+[core]: http://github.com/coding-in-the-wild/just-login-core
