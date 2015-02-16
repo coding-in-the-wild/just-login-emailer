@@ -70,7 +70,7 @@ var defaultMailOptions = {
 	subject: 'login now'
 }
 
-justLoginEmailer(emitter, htmlEmail, transportOptions, defaultMailOptions, function (err, info) {
+justLoginEmailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions, function (err, info) {
 	if (err) console.error(err)
 })
 ```
