@@ -1,4 +1,4 @@
-var nodemailer = require("nodemailer")
+var nodemailer = require('nodemailer')
 var xtend = require('xtend')
 
 module.exports = function loginMailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions, callback) {
