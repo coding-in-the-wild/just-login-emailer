@@ -1,33 +1,6 @@
 just-login-emailer
 ==================
 
-#Install
-
-With [npm](http://npmjs.org) do: 
-	
-	npm install just-login-emailer
-
-#Require
-
-Require in src:
-
-```js
-var justLoginEmailer = require('just-login-emailer')
-```
-
-#Usage
-
-##justLoginEmailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions, callback)
-
-- `emitter` is an emitter that emits the event, `authentication initiated`, like the just-login-core does.
-- `createHtmlEmail` is a function with the argument `token` and it returns an HTML email
-	- `token` is the token string given in the `authentication initiated` event.
-- `transportOptions` is the object given to [`nodemailer.createTransport()`][nm-ct]. Needs these properties: `host`, `port`, `secure`, and `auth`. `auth` needs these properties: `user`, `pass`
-- `defaultMailOptions` is an object with these properties: `from`, `to`, `subject`, `text`, `html`, etc. (Needs `from` and `subject`. `from` must be an email address. See [nodemailer/Email Message Fields][nm-emf] for more information. Please note that the `to` and `html` properties will be overwritten.)
-- `callback` is the callback function with the arguments `err` and `info`.
-	- `err` is an error object if sending failed, and `null` if it was successful.
-	- `info` is an object. See [nodemailer/Sending mail][nm-sm] for details on `info`. (You probably don't need this object.)
-
 #Example
 
 Usage with the [Just Login Core][core]
@@ -74,6 +47,30 @@ justLoginEmailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions,
 	if (err) console.error(err)
 })
 ```
+
+# Usage
+
+```js
+var justLoginEmailer = require('just-login-emailer')
+```
+
+## justLoginEmailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions, callback)
+
+- `emitter` is an emitter that emits the event, `authentication initiated`, like the just-login-core does.
+- `createHtmlEmail` is a function with the argument `token` and it returns an HTML email
+	- `token` is the token string given in the `authentication initiated` event.
+- `transportOptions` is the object given to [`nodemailer.createTransport()`][nm-ct]. Needs these properties: `host`, `port`, `secure`, and `auth`. `auth` needs these properties: `user`, `pass`
+- `defaultMailOptions` is an object with these properties: `from`, `to`, `subject`, `text`, `html`, etc. (Needs `from` and `subject`. `from` must be an email address. See [nodemailer/Email Message Fields][nm-emf] for more information. Please note that the `to` and `html` properties will be overwritten.)
+- `callback` is the callback function with the arguments `err` and `info`.
+	- `err` is an error object if sending failed, and `null` if it was successful.
+	- `info` is an object. See [nodemailer/Sending mail][nm-sm] for details on `info`. (You probably don't need this object.)
+
+
+# Install
+
+With [npm](http://npmjs.org) do:
+
+	npm install just-login-emailer
 
 
 [nm-emf]: https://github.com/andris9/Nodemailer#e-mail-message-fields
