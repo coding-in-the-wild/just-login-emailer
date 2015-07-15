@@ -61,7 +61,7 @@ var justLoginEmailer = require('just-login-emailer')
 	- `token` is the token string given in the `authentication initiated` event.
 - `transportOptions` is the object given to [`nodemailer.createTransport()`][nm-ct]. Needs these properties: `host`, `port`, `secure`, and `auth`. `auth` needs these properties: `user`, `pass`
 - `defaultMailOptions` is an object with these properties: `from`, `to`, `subject`, `text`, `html`, etc. (Needs `from` and `subject`. `from` must be an email address. See [nodemailer/Email Message Fields][nm-emf] for more information. Please note that the `to` and `html` properties will be overwritten.)
-- `callback` is the callback function with the arguments `err` and `info`.
+- `callback` is an optional callback function given the following parameters
 	- `err` is an error object if sending failed, and `null` if it was successful.
 	- `info` is an object. See [nodemailer/Sending mail][nm-sm] for details on `info`. (You probably don't need this object.)
 
