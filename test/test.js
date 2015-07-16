@@ -1,17 +1,22 @@
-var test = require('tap').test
+var test = require('tape')
 var EventEmitter = require('events').EventEmitter
 var LoginMailer = require('../index.js')
+var xtend = require('xtend')
 
-var emailAddress = 'joseph'+'dykstra@gmail.com' //Send the email to whom...
-var password = require('../../config.json').justLogin.email.auth.pass //password for sending emails
-var transportOptions = {
-	host: 'smtp.gmail.com',
-	port: 465,
-	secure: true,
-	auth: {
-		user: 'justloginexample@gmail.com',
-		pass: password
-	}
+var transportOpts = require('./transport-options.json')
+var mailOpts = {
+	from: transportOpts.auth.user,
+	subject: 'Login to this site!'
+}
+var authRequest = {
+	'token': 'totallyNotFakeLoginToken',
+	'contactAddress': 'josephdykstra@gmail.com'
+}
+
+function createHtmlEmail(loginToken) {
+	var url = 'http://localhost:9999/magical-login?token=' + loginToken
+	var link = 'here!'.link(url)
+	return '<div>You should totally log in!<br>Click ' + link + '</div>'
 }
 
 test('test for email sending', function (t) {
@@ -19,25 +24,11 @@ test('test for email sending', function (t) {
 
 	var fakeCore = new EventEmitter()
 
-	function createHtmlEmail(loginToken) {
-		return '<div>You should totally log in!<br />' +
-			'Click <a href="http://localhost:9999/magical-login?token=' +
-			loginToken + '">here!</a></div>'
-	}
-
-	var defaultMailOptions = {
-		from: 'justloginexample@gmail.com',
-		subject: 'Login to this site!'
-	}
-
-	LoginMailer(fakeCore, createHtmlEmail, transportOptions, defaultMailOptions, function (err, info) {
-		t.notOk(err, "no error")
-		t.ok(info, "got response")
+	LoginMailer(fakeCore, createHtmlEmail, transportOpts, mailOpts, function (err, info) {
+		t.notOk(err, 'no error')
+		t.ok(info, 'got response')
 		t.end()
 	})
 
-	fakeCore.emit('authentication initiated', {
-		token: 'totallyNotFakeLoginToken',
-		contactAddress: emailAddress
-	})
+	fakeCore.emit('authentication initiated', authRequest)
 })
