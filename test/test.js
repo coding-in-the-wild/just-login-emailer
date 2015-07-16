@@ -3,7 +3,7 @@ var EventEmitter = require('events').EventEmitter
 var LoginMailer = require('../index.js')
 var xtend = require('xtend')
 
-var transportOpts = require('./transport-options.json')
+var transportOpts = require('../../config.json').justLogin.email
 var mailOpts = {
 	from: transportOpts.auth.user,
 	subject: 'Login to this site!'
