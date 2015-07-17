@@ -4,31 +4,22 @@ var LoginMailer = require('../index.js')
 var xtend = require('xtend')
 
 var transportOpts = require('../../config.json').justLogin.email
-var mailOpts = {
-	from: transportOpts.auth.user,
-	subject: 'Login to this site!'
-}
 var authRequest = {
-	'token': 'totallyNotFakeLoginToken',
-	'contactAddress': 'josephdykstra@gmail.com'
-}
-
-function createHtmlEmail(loginToken) {
-	var url = 'http://localhost:9999/magical-login?token=' + loginToken
-	var link = 'here!'.link(url)
-	return '<div>You should totally log in!<br>Click ' + link + '</div>'
+	token: 'totallyNotFakeLoginToken',
+	contactAddress: 'josephdykstra@gmail.com'
 }
 
 test('test for email sending', function (t) {
 	t.plan(2)
 
 	var fakeCore = new EventEmitter()
+	var options = {
+		createHtmlEmail: String,
+		transport: {}, //transportOpts,
+		mail: { subject: 'Login to this site!' }
+	}
 
-	LoginMailer(fakeCore, createHtmlEmail, transportOpts, mailOpts, function (err, info) {
-		t.notOk(err, 'no error')
-		t.ok(info, 'got response')
-		t.end()
-	})
+	LoginMailer(fakeCore, options)
 
 	fakeCore.emit('authentication initiated', authRequest)
 })

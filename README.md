@@ -1,34 +1,25 @@
 just-login-emailer
 ==================
 
-#Example
+# Example
 
-Usage with the [Just Login Core][core]
+Usage with the [Just Login Core](http://github.com/coding-in-the-wild/just-login-core)
 
 ```js
 var justLoginEmailer = require('just-login-emailer')
 var JustLoginCore = require('just-login-core')
-var level = require('level')
-var escapeHtml = require('escape-html')
-
-var db = level('./databases/core')
-var justLoginCore = JustLoginCore(db)
+var db = require('level')('./databases/core')
+var core = JustLoginCore(db)
 
 setTimeout(function () {
-	justLoginCore.beginAuthentication('session id', 'user@example.com', function () {})
+	core.beginAuthentication('session id', 'user@example.com', function () {})
 }, 5000)
 
 function createHtmlEmail(token) {
-	return escapeHtml(
-		'<html><body>'
-		+ '<h1>Login Now!</h1>'
-		+ '<p>If you do want to log in, click <a href="http://example.com/login?token=' + token + '">right here</a>!</p>'
-		+ '<p>If not, ignore this email!</p>'
-		+ '</body></html>'
-	)
+	return 'To login, <a href="http://example.com/login?token=' + token + '">click here</a>!'
 }
 
-var transportOptions = { //if using gmail's sending server
+var transportOpts = {
 	host: "smtp.gmail.com",
 	port: 465,
 	secure: true,
@@ -38,13 +29,9 @@ var transportOptions = { //if using gmail's sending server
 	}
 }
 
-var defaultMailOptions = {
-	from: 'sending_address@gmail.com',
-	subject: 'login now'
-}
-
-justLoginEmailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions, function (err, info) {
-	if (err) console.error(err)
+justLoginEmailer(core, {
+	createHtmlEmail: createHtmlEmail,
+	transport: transportOpts
 })
 ```
 
@@ -54,26 +41,79 @@ justLoginEmailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions,
 var justLoginEmailer = require('just-login-emailer')
 ```
 
-## justLoginEmailer(emitter, createHtmlEmail, transportOptions, defaultMailOptions, callback)
+## `var emitter = justLoginEmailer(core, options)`
 
-- `emitter` is an emitter that emits the event, `authentication initiated`, like the just-login-core does.
-- `createHtmlEmail` is a function with the argument `token` and it returns an HTML email
-	- `token` is the token string given in the `authentication initiated` event.
-- `transportOptions` is the object given to [`nodemailer.createTransport()`][nm-ct]. Needs these properties: `host`, `port`, `secure`, and `auth`. `auth` needs these properties: `user`, `pass`
-- `defaultMailOptions` is an object with these properties: `from`, `to`, `subject`, `text`, `html`, etc. (Needs `from` and `subject`. `from` must be an email address. See [nodemailer/Email Message Fields][nm-emf] for more information. Please note that the `to` and `html` properties will be overwritten.)
-- `callback` is an optional callback function given the following parameters
-	- `err` is an error object if sending failed, and `null` if it was successful.
-	- `info` is an object. See [nodemailer/Sending mail][nm-sm] for details on `info`. (You probably don't need this object.)
+### `core`
+
+An emitter that emits the event, `authentication initiated`, usually a [`just-login-core`](http://github.com/coding-in-the-wild/just-login-core) object.
+
+#### `options.createHtmlEmail`
+
+A function with the argument `token` and it returns an HTML email
+`token` is the token string given in the `authentication initiated` event.
+
+```js
+function createHtmlEmail(token) {
+	return '<a href="http://example.com/login/' + token + '">Click to Login!</a>'
+}
+```
+
+#### `options.transport` object
+
+A [Nodemailer transport object](https://github.com/andris9/nodemailer-smtp-transport#usage). The following fields are suggested.
+
+```js
+{
+	host: 'smtp.gmail.com',
+	port: 465,
+	secure: true,
+	auth: {
+		user: 'sender@gmail.com',
+		pass:'password123'
+	}
+}
+```
+
+#### `mail` object (optional)
+
+- `from` string, e.g. `'sender@gmail.com'`, defaults to `options.transport.auth.user` if it exists
+- `subject` string, e.g. `'Log in to this site'`, defaults to `'Login'`
+
+```js
+{
+	from: 'sender@gmail.com',
+	subject: 'Log in to example.com!'
+}
+```
+
+See [full list of options](https://github.com/andris9/Nodemailer#e-mail-message-fields). (`to` and `html` properties are ignored.)
+
+### `emitter`
+
+An emitter that sends an event on the status of an email.
+
+- `emitter.emit('error', err)` on an error
+- `emitter.emit('data', info)` if it was successful. See [full specs of info object](https://github.com/andris9/Nodemailer#sending-mail).
+
+```js
+var emitter = JustLoginEmailer(core, options)
+
+emitter.on('error', function (err) {
+	throw err
+})
+
+emitter.on('data', function (info) {
+	console.log(info.response)
+})
+```
 
 
 # Install
 
-With [npm](http://npmjs.org) do:
+With [npm](http://nodejs.org/download) do:
 
 	npm install just-login-emailer
 
+# License
 
-[nm-emf]: https://github.com/andris9/Nodemailer#e-mail-message-fields
-[nm-sm]: https://github.com/andris9/Nodemailer#sending-mail
-[nm-ct]: https://github.com/andris9/Nodemailer#tldr-usage-example
-[core]: http://github.com/coding-in-the-wild/just-login-core
+[VOL](http://veryopenlicense.com)
