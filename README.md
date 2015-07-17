@@ -1,6 +1,8 @@
 just-login-emailer
 ==================
 
+Sends emails to folks who want to log in!
+
 # Example
 
 Usage with the [Just Login Core](http://github.com/coding-in-the-wild/just-login-core)
@@ -12,7 +14,7 @@ var db = require('level')('./databases/core')
 var core = JustLoginCore(db)
 
 setTimeout(function () {
-	core.beginAuthentication('session id', 'user@example.com', function () {})
+	core.beginAuthentication('session id', 'user@example.com')
 }, 5000)
 
 function createHtmlEmail(token) {
@@ -20,12 +22,12 @@ function createHtmlEmail(token) {
 }
 
 var transportOpts = {
-	host: "smtp.gmail.com",
+	host: 'smtp.gmail.com',
 	port: 465,
 	secure: true,
 	auth: {
-		user: "sending_address@gmail.com",
-		pass: "whatever the password is"
+		user: 'sending_address@gmail.com',
+		pass: 'whatever the password is'
 	}
 }
 
@@ -47,10 +49,11 @@ var justLoginEmailer = require('just-login-emailer')
 
 An emitter that emits the event, `authentication initiated`, usually a [`just-login-core`](http://github.com/coding-in-the-wild/just-login-core) object.
 
-#### `options.createHtmlEmail`
+#### `options.createHtmlEmail` function
 
-A function with the argument `token` and it returns an HTML email
-`token` is the token string given in the `authentication initiated` event.
+A function that is passed a `token` and returns an HTML email message.
+
+`token` string, e.g. `'b02ceecc-2c81-11e5-89e4-83f49df54746'`
 
 ```js
 function createHtmlEmail(token) {
@@ -78,6 +81,7 @@ A [Nodemailer transport object](https://github.com/andris9/nodemailer-smtp-trans
 
 - `from` string, e.g. `'sender@gmail.com'`, defaults to `options.transport.auth.user` if it exists
 - `subject` string, e.g. `'Log in to this site'`, defaults to `'Login'`
+- See [full list of options](https://github.com/andris9/Nodemailer#e-mail-message-fields). (`to` and `html` properties are ignored.)
 
 ```js
 {
@@ -85,8 +89,6 @@ A [Nodemailer transport object](https://github.com/andris9/nodemailer-smtp-trans
 	subject: 'Log in to example.com!'
 }
 ```
-
-See [full list of options](https://github.com/andris9/Nodemailer#e-mail-message-fields). (`to` and `html` properties are ignored.)
 
 ### `emitter`
 
@@ -106,7 +108,6 @@ emitter.on('data', function (info) {
 	console.log(info.response)
 })
 ```
-
 
 # Install
 
