@@ -47,7 +47,7 @@ var justLoginEmailer = require('just-login-emailer')
 
 ### `core`
 
-An emitter that emits the event, `authentication initiated`, usually a [`just-login-core`](http://github.com/coding-in-the-wild/just-login-core) object.
+A [`just-login-core`](http://github.com/coding-in-the-wild/just-login-core) object.
 
 #### `options.createHtmlEmail`
 
