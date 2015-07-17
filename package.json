@@ -11,7 +11,7 @@
     "just-login"
   ],
   "author": "ArtskydJ",
-  "license": "WTFPL",
+  "license": "VOL",
   "bugs": {
     "url": "https://github.com/coding-in-the-wild/just-login-emailer/issues"
   },
@@ -21,6 +21,7 @@
     "xtend": "^4.0.0"
   },
   "devDependencies": {
+    "got": "^3.3.1",
     "tape": "^4.0.0"
   },
   "scripts": {
