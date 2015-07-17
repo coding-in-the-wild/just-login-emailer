@@ -49,7 +49,7 @@ var justLoginEmailer = require('just-login-emailer')
 
 An emitter that emits the event, `authentication initiated`, usually a [`just-login-core`](http://github.com/coding-in-the-wild/just-login-core) object.
 
-#### `options.createHtmlEmail` function
+#### `options.createHtmlEmail`
 
 A function that is passed a `token` and returns an HTML email message.
 
@@ -61,7 +61,7 @@ function createHtmlEmail(token) {
 }
 ```
 
-#### `options.transport` object
+#### `options.transport`
 
 A [Nodemailer transport object](https://github.com/andris9/nodemailer-smtp-transport#usage). The following fields are suggested.
 
@@ -77,11 +77,13 @@ A [Nodemailer transport object](https://github.com/andris9/nodemailer-smtp-trans
 }
 ```
 
-#### `mail` object (optional)
+#### `options.mail` (optional)
+
+An optional object with the following properties:
 
 - `from` string, e.g. `'sender@gmail.com'`, defaults to `options.transport.auth.user` if it exists
 - `subject` string, e.g. `'Log in to this site'`, defaults to `'Login'`
-- See [full list of options](https://github.com/andris9/Nodemailer#e-mail-message-fields). (`to` and `html` properties are ignored.)
+- See [full list of mail options](https://github.com/andris9/Nodemailer#e-mail-message-fields). (`to` and `html` properties are ignored.)
 
 ```js
 {
