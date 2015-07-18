@@ -1,5 +1,5 @@
 node_modules/*
 npm-debug.log
-test/helpers/stats-url.json
+test/helpers/mailgun-url.json
 test/helpers/mailgun-password.json
 test/helpers/mailinator-url.json

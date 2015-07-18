@@ -1,5 +1,5 @@
 ﻿var got = require('got')
-var statsUrl = require('./stats-url.json')
+var statsUrl = require('./mailgun-url.json')
 
 module.exports = function numEmailsSent(cb) {
 	got(statsUrl, function (err, data) {
