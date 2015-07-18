@@ -5,7 +5,14 @@ var xtend = require('xtend')
 var numEmailsSent = require('./helpers/num-emails-sent.js')
 var numEmailsReceived = require('./helpers/num-emails-received.js')
 
-var transportOpts = require('../../config.json').justLogin.email
+var transportOpts = {
+	host: 'smtp.mailgun.org',
+	port: 587,
+	auth: {
+		user: 'postmaster@mail.justlogin.xyz',
+		pass: require('./helpers/mailgun-password.json')
+	}
+}
 var localPart = Math.random().toString().slice(2)
 var startSent = 0
 var startReceived = 0
