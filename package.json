@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "got": "^3.3.1",
+    "mailinator": "^1.0.2",
     "tape": "^4.0.0"
   },
   "scripts": {

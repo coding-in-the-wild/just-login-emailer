@@ -2,29 +2,37 @@ var test = require('tape')
 var EventEmitter = require('events').EventEmitter
 var LoginMailer = require('../index.js')
 var xtend = require('xtend')
-var getEmailsSentToday = require('./helpers/emails-sent-today.js')
+var numEmailsSent = require('./helpers/num-emails-sent.js')
+var numEmailsReceived = require('./helpers/num-emails-received.js')
 
 var transportOpts = require('../../config.json').justLogin.email
-var random = Math.random().toString().slice(2)
-var authRequest = {
-	token: random,
-	contactAddress: 'josephdykstra@gmail.com'
-}
-var emailsSentToday = 0
+var localPart = Math.random().toString().slice(2)
+var startSent = 0
+var startReceived = 0
 
-test('get baseline', function (t) {
+test('get baseline sent', function (t) {
 	t.plan(2)
-	
-	getEmailsSentToday(t, function (err, num) {
+	numEmailsSent(function (err, numSent) {
 		t.notOk(err, err ? err.message : 'no error')
-		t.ok(num, 'got the number ' + num)
-		emailsSentToday = num
+		t.equal(typeof numSent, 'number', 'got the number ' + numSent)
+		startSent = numSent
 		t.end()
 	})
 })
 
+test('get baseline received', function (t) {
+	t.plan(2)
+	numEmailsReceived(localPart, function (err, numReceived) {
+		t.notOk(err, err ? err.message : 'no error')
+		t.equal(typeof numReceived, 'number', 'got the number ' + numReceived)
+		startReceived = numRecieved
+		t.end()
+	})
+})
+
+
 test('test for email sending', function (t) {
-	t.plan(3)
+	t.plan(4)
 
 	var core = new EventEmitter()
 
@@ -34,8 +42,10 @@ test('test for email sending', function (t) {
 		mail: { subject: 'Login to this site!' }
 	})
 
-	core.emit('authentication initiated', authRequest)
-	
+	var email = localPart + '@mailinator.com'
+	t.pass('Sending an email to ' + email)
+	core.emit('authentication initiated', { token: ':P', contactAddress: email })
+
 	emitter.on('error', function (err) {
 		t.fail(err.message)
 		t.end()
@@ -56,12 +66,32 @@ test('wait a bit', function (t) {
 	}, 1000)
 })
 
-test('email was actually sent somewheres', function (t) {
-	t.plan(2)
-	
-	getEmailsSentToday(t, function (err, num) {
+test('correct number of emails sent', function (t) {
+	t.plan(3)
+	numEmailsSent(function (err, numSent) {
 		t.notOk(err, err ? err.message : 'no error')
-		t.equal(emailsSentToday + 1, num)
+		t.equal(typeof numSent, 'number', 'got the number ' + numSent)
+		var msg = 'started with ' + startSent + ', have ' + numSent
+		t.equal(startSent + 1, numSent, msg)
+		t.end()
+	})
+})
+
+test('wait a bit MORE', function (t) {
+	t.plan(1)
+	setTimeout(function () {
+		t.pass('waited')
+		t.end()
+	}, 2500)
+})
+
+test('correct number of emails received', function (t) {
+	t.plan(3)
+	numEmailsReceived(localPart, function (err, numReceived) {
+		t.notOk(err, err ? err.message : 'no error')
+		t.equal(typeof numReceived, 'number', 'got the number ' + numReceived)
+		var msg = 'started with ' + startReceived + ', have ' + numReceived
+		t.equal(startReceived + 1, numReceived, msg)
 		t.end()
 	})
 })
